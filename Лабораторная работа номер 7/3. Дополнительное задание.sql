@@ -1,0 +1,7 @@
+use K_UNIVER
+
+SELECT [GROUP].IDGROUP, 
+	   count(STUDENT.IDSTUDENT) [Кол-во студентов]
+FROM  [GROUP] inner join STUDENT
+		ON [GROUP].IDGROUP = STUDENT.IDGROUP
+		group by [GROUP].IDGROUP

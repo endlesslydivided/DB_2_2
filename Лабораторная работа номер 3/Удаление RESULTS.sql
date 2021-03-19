@@ -1,0 +1,3 @@
+use KOVALEV_UNIVER
+
+Drop Table RESULTS;

@@ -1,0 +1,2 @@
+use master;
+DROP DATABASE TMPK_UNIVER;
