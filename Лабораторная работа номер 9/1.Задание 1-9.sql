@@ -138,13 +138,13 @@ SELECT IDSTUDENT,
 		GROUP BY IDSTUDENT 
 
 --					ЗАДАНИЕ 7
---DROP TABLE #TEMP1;
---CREATE TABLE #TEMP1
---		(
---			ID int identity(1,1),
---			RANDOM_NUMBER int,
---			WORD varchar(50) default 'Значение по-умолчанию'
---		);
+DROP TABLE #TEMP1;
+CREATE TABLE #TEMP1
+		(
+			ID int identity(1,1),
+			RANDOM_NUMBER int,
+			WORD varchar(50) default 'Значение по-умолчанию'
+		);
 
 DECLARE  @iter int = 0;
 WHILE @iter < 10
@@ -157,7 +157,7 @@ SELECT * from #TEMP1;
 
 --					ЗАДАНИЕ 8
 begin try
-Select * from STUDENT;
+Select * from STUDENT where STUDENT.BDAY =  @sdfsd;
 end try
 begin catch
 print 'Код ошибки: ' + ERROR_NUMBER()
@@ -168,3 +168,4 @@ print 'Уровень серьёзности ошибки: ' + ERROR_SEVERITY()
 print 'Метка ошибки: ' + ERROR_STATE()
 
 end catch
+ 
