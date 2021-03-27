@@ -1,37 +1,39 @@
-﻿use master;
+﻿use K_UNIVER;
 
 --							ЗАДАНИЕ 1
---exec sp_helpindex 'AUDITORIUM' 
---exec sp_helpindex 'AUDITORIUM TYPE'
---exec sp_helpindex 'FACULTY'
---exec sp_helpindex 'GROUP'
---exec sp_helpindex 'PROFESSION'
---exec sp_helpindex 'PROGRESS'
---exec sp_helpindex 'PULPIT'
---exec sp_helpindex 'STUDENT'
---exec sp_helpindex 'SUBJECT'
---exec sp_helpindex 'TEACHER'
---exec sp_helpindex 'TIMETABLE'
 
---CREATE TABLE #EXAMPLE
---(	
---	ID int identity(1,1),
---	STRING varchar(13)
---)
+
+exec sp_helpindex 'AUDITORIUM' 
+exec sp_helpindex 'AUDITORIUM TYPE'
+exec sp_helpindex 'FACULTY'
+exec sp_helpindex 'GROUP'
+exec sp_helpindex 'PROFESSION'
+exec sp_helpindex 'PROGRESS'
+exec sp_helpindex 'PULPIT'
+exec sp_helpindex 'STUDENT'
+exec sp_helpindex 'SUBJECT'
+exec sp_helpindex 'TEACHER'
+exec sp_helpindex 'TIMETABLE'
+
+CREATE TABLE #EXAMPLE
+(	
+	ID int identity(1,1),
+	STRING varchar(13)
+)
 
 set nocount on;
---DECLARE @iter int = 0;
---WHILE @iter < 10000
---	begin
---	INSERT INTO #EXAMPLE values (REPLICATE('строка ',2));
---	SET @iter = @iter + 1;
---	end;
+DECLARE @iter int = 0;
+WHILE @iter < 10000
+	begin
+	INSERT INTO #EXAMPLE values (REPLICATE('строка ',2));
+	SET @iter = @iter + 1;
+	end;
 
---DROP TABLE #EXAMPLE
+DROP TABLE #EXAMPLE
 
---CREATE CLUSTERED INDEX #EXAMPLE_CL1 on #EXAMPLE(ID asc);
---DROP INDEX [#EXAMPLE].[#EXAMPLE_CL1]
-
+CREATE CLUSTERED INDEX #EXAMPLE_CL1 on #EXAMPLE(ID asc);
+DROP INDEX [#EXAMPLE].[#EXAMPLE_CL1]
+--
 SELECT * FROM #EXAMPLE where ID between 150 and 200 order by ID;
 checkpoint;  
 DBCC DROPCLEANBUFFERS;  
