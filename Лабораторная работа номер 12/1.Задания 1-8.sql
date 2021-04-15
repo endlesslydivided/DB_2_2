@@ -8,7 +8,7 @@ if  exists (select * from  SYS.OBJECTS where OBJECT_ID= object_id(N'DBO.MyTable'
 		drop table MyTable;        
 	end;
 
-declare @c int, @flag char = 'c';           
+declare @c int, @flag char = 'r';           
 SET IMPLICIT_TRANSACTIONS  ON
 	
 CREATE table MyTable(
@@ -47,6 +47,7 @@ begin try
 		delete AUDITORIUM where AUDITORIUM_NAME = '301-1';
 		insert into AUDITORIUM values('301-1','ЛБ-К','15','301-1');
 		update AUDITORIUM set AUDITORIUM_CAPACITY = '30' where AUDITORIUM_NAME='301-1';
+		raiserror('Балалала',1,1);
 	commit tran;
 end try
 begin catch
@@ -164,21 +165,21 @@ set transaction isolation level SERIALIZABLE
 		delete SUBJECT where SUBJECT = 'СТПИ';
 		INSERT into SUBJECT values('СТПИ','Современные технологии программирования в  интернете','ПИ');   ;
         update SUBJECT set SUBJECT_NAME = 'Современные технологии программирования в  INTERNET' where  SUBJECT = 'СТПИ';
-	    select SUBJECT_NAME from SUBJECT where PULPIT = 'ПИ';
+	    select SUBJECT_NAME,PULPIT from SUBJECT where PULPIT = 'ПИ';
 	-------------------------- t1 -----------------
-	 select SUBJECT_NAME from SUBJECT where PULPIT = 'ПИ';
+	 select SUBJECT_NAME,PULPIT from SUBJECT where PULPIT = 'ПИ';
 	-------------------------- t2 ------------------ 
 	commit; 	
 
 --- B ---	
 	begin transaction 	  
 		delete SUBJECT where SUBJECT = 'СТПИ';
-		INSERT into SUBJECT values('СТПИ','Современные технологии программирования в  интернете','ПИ');   ;
+		INSERT into SUBJECT values('СТПИ','Современные технологии программирования в  интернете','ПИ');
         update SUBJECT set SUBJECT_NAME = 'Современные технологии программирования в  INTERNET' where  SUBJECT = 'СТПИ';
 	    select SUBJECT_NAME from SUBJECT where PULPIT = 'ПИ';
      -------------------------- t1 --------------------
      commit; 
-     select SUBJECT_NAME from SUBJECT where PULPIT = 'ПИ';
+     select SUBJECT_NAME,PULPIT from SUBJECT where PULPIT = 'ПИ';
      -------------------------- t2 --------------------
 	 		
 	delete SUBJECT where SUBJECT = 'СТПИ';

@@ -11,6 +11,8 @@ begin
 	return @q;
 end;
 
+go
+
 DROP PROCEDURE PSUBJECT;
 
 declare @result int = 0, @r int = 0
@@ -22,6 +24,7 @@ end
 --							ЗАДАНИЕ 3
 
 use K_UNIVER;
+
 go
 create PROCEDURE PSUBJECT_3 @find_sub varchar(20)
 as
@@ -91,21 +94,21 @@ as
 		declare @subjects nvarchar(300) ='',@subject nvarchar(10);
 		DECLARE  Sub_Report CURSOR LOCAL for
 		select [SUBJECT] from [SUBJECT] where PULPIT = @p;
-		if not exists (select [SUBJECT] from [SUBJECT] where PULPIT = @p)
+		if  not exists (select [SUBJECT] from [SUBJECT] where PULPIT = @p)
 			raiserror('Ошибка',11,1);
 		else
-			open Sub_Rep;
-			fetch Sub_Rep into @subject;
+			open Sub_Report;
+			fetch Sub_Report into @subject;
 			set @subjects += RTRIM(@subject);
 			while @@FETCH_STATUS = 0
 				begin	
-					fetch Sub_Rep into @subject;
+					fetch Sub_Report into @subject;
 					set @subjects = RTRIM(@subject) + ',' +@subjects;
 					set @ret = @ret + 1;
 				end;
 			print 'Дисциплины кафедры ' + @p;
 			print @subjects;
-			close Sub_Rep;
+			close Sub_Report;
 			return @ret;
 	end try
 
@@ -157,7 +160,7 @@ as
 	end catch;
 
 DECLARE @paud int = 0;
-EXEC @paud = PAUDITORIUM_INSERTX @a='423-1',@n='423-1',@c='90',@t='ЛБ-К', @tn ='Компьютерный класс';
+EXEC @paud = PAUDITORIUM_INSERTX @a='423-1',@n='423-1',@c='90',@t='ЛЛ-К', @tn ='Компьютерный класс';
 DELETE AUDITORIUM where AUDITORIUM_NAME='423-1';
 
 DROP PROCEDURE PAUDITORIUM_INSERTX;

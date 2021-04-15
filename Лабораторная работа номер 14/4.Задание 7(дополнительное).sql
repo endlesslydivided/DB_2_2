@@ -5,8 +5,8 @@ use K_UNIVER;
 go
 CREATE PROCEDURE PRINT_REPORTX @f CHAR(10) = NULL, @p CHAR(10) = NULL
 as
-	DECLARE @faculty varchar(150), @pulpit varchar(200), @discipline varchar(200), @discipline_list varchar(200) = '', 
-			@qteacher varchar(3), @temp_faculty varchar(50), @temp_pulpit varchar(50), @q int = 0;
+	DECLARE @faculty varchar(150), @pulpit varchar(200), @discipline varchar(2000), @discipline_list varchar(2000) = '', 
+			@qteacher varchar(3), @temp_faculty varchar(50), @temp_pulpit varchar(50), @q int = 0, @out int = 0;
 
 	DECLARE GET_REPORT_CURSOR CURSOR LOCAL STATIC for
 	SELECT FACULTY.FACULTY,PULPIT.PULPIT,dbo.FSUBJECTS(PULPIT.PULPIT), count(TEACHER.TEACHER_NAME)
@@ -22,25 +22,34 @@ as
 				FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
 				while(@@FETCH_STATUS = 0)
 					begin
+						if(@out = 1)
+							begin
+								while(@temp_pulpit = @pulpit and @@FETCH_STATUS = 0)
+									begin
+										FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
+									end;
+								set @out = 0;
+							end;
 						if(@faculty != @f)
 							FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
-						while (@faculty = @f)
+						else if (@faculty = @f and @out != 1)
 							begin
 								print ' ▬ Факультет: ' + rtrim(@f);;
 								print '		►Кафедра: ' + rtrim(@pulpit);
 								print '			•Количество преподавателей: '+ cast(dbo.FTEACHER(@pulpit) as varchar) ;
-								set @discipline_list = '			•Дисциплины: ';
+								set @discipline_list = '';
 								set @discipline_list +=@discipline;
-								set @temp_pulpit = @pulpit;																
-										FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
-								if(@discipline_list != '			•Дисциплины: ')
+								set @temp_pulpit = @pulpit;	
+								set @out = 1;
+								FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
+								if(@discipline_list != '')
 									begin
-										print rtrim(@discipline_list) ;
-										set @discipline_list = '			•Дисциплины: ';
+										print '				'+rtrim(@discipline_list) ;
+										set @discipline_list = '';
 									end
 								else
 									begin
-										print rtrim(@discipline_list) + ' нет' ;
+										print rtrim(@discipline_list) + 'Дисцплины: нет' ;
 									end;
 								if(@@FETCH_STATUS != 0)
 									begin
@@ -55,28 +64,40 @@ as
 			begin
 				OPEN GET_REPORT_CURSOR
 				FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
-				set @discipline_list = '			•Дисциплины: ';
 				while(@@FETCH_STATUS = 0)
 					begin
 						if(@faculty != @f)
-						FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
-						while (@faculty = @f)
 							begin
-									set @discipline_list = '			•Дисциплины: ';
-								set @discipline_list +=@discipline;
+								FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
 							end;
-						if(@discipline_list != '			•Дисциплины: ')
+						else if (@faculty = @f)
+							begin
+								while(@pulpit != @p and @@FETCH_STATUS = 0)
 									begin
-										print rtrim(@discipline_list) ;
-										set @discipline_list = '			•Дисциплины: ';
+										FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
+									end;
+								if(@pulpit != @p)
+									return 0;
+								print ' ▬ Факультет: ' + rtrim(@f);;
+								print '		►Кафедра: ' + rtrim(@pulpit);
+								print '			•Количество преподавателей: '+ cast(dbo.FTEACHER(@pulpit) as varchar) ;
+								set @discipline_list ='';
+								set @discipline_list +=@discipline;
+								
+								if(@discipline_list != '')
+									begin
+										print '				'+rtrim(@discipline_list) ;
 									end
 								else
 									begin
-										print rtrim(@discipline_list) + ' нет' ;
+										print '				•Дисциплины: нет' ;
 									end;
-						return @q;
-				end;
+								return @q;
+								FETCH GET_REPORT_CURSOR into @faculty,@pulpit,@discipline,@qteacher;
+							end;											
+					end;
 				CLOSE GET_REPORT_CURSOR;
+				return @q;
 			end;
 		ELSE IF(@f is NULL and @p is not NULL)
 			begin
@@ -92,17 +113,17 @@ as
 								print ' ▬ Факультет: ' + rtrim(@temp_faculty);
 								print '		►Кафедра: ' + rtrim(@pulpit);
 								print '			•Количество преподавателей: '+ cast(dbo.FTEACHER(@pulpit) as varchar) ;
-								set @discipline_list = '			•Дисциплины: ';
+								set @discipline_list = '';
 								set @discipline_list +=@discipline;
 								set @temp_pulpit = @pulpit;
-								if(@discipline_list != '			•Дисциплины: ')
+								if(@discipline_list != '')
 									begin
-										print rtrim(@discipline_list) ;
-										set @discipline_list = '			•Дисциплины: ';
+										print '				' + rtrim(@discipline_list) ;
+										set @discipline_list = '';
 									end
 								else
 									begin
-										print rtrim(@discipline_list) + ' нет' ;
+										print '				Дисцплиные: нет' ;
 									end;
 								return @q;
 						end;
@@ -123,6 +144,7 @@ as
 		print 'Метка ошибки: ' + cast(ERROR_STATE()as varchar(8));
 	end catch;
 -- ▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+
 go
 SELECT FACULTY.FACULTY,PULPIT.PULPIT,SUBJECT.SUBJECT, count(TEACHER.TEACHER_NAME)
 		from FACULTY inner join PULPIT

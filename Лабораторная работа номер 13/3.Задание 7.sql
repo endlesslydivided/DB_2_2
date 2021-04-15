@@ -1,4 +1,4 @@
---							«¿ƒ¿Õ»≈ 3
+
 
 use K_MyBase;
 go
@@ -25,7 +25,7 @@ DROP PROCEDURE PCONTACTS;
 DROP TABLE #CONTACTS;
 
 
---							«¿ƒ¿Õ»≈ 4
+
 
 go
 CREATE PROCEDURE PREPORTS_INSERT @rd nvarchar(20), @nc nvarchar(20), @ni nvarchar(50), @v real
@@ -56,7 +56,7 @@ DELETE Œ“◊®“€ where ƒ‡Ú‡_ÓÚ˜∏Ú‡='16/05/21';
 
 DROP PROCEDURE PREPORTS_INSERT;
 
---							«¿ƒ¿Õ»≈ 5
+
 
 go
 CREATE PROCEDURE COMPANY_REPORT @p nvarchar(100)
@@ -102,7 +102,6 @@ DROP PROCEDURE COMPANY_REPORT;
 		
 
 
---							«¿ƒ¿Õ»≈ 6
 
 go
 CREATE PROCEDURE PREPORTS_INSERTX @rd nvarchar(20), @nc nvarchar(20), @ni nvarchar(50), @v real, @nii nvarchar(50), @vpi real

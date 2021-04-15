@@ -23,16 +23,16 @@ go
 create function FSUBJECTS(@p varchar(20)) returns varchar(300)
 as begin
 DECLARE Discipline CURSOR LOCAL for select [SUBJECT_NAME] from [SUBJECT] where [SUBJECT].PULPIT = @p;
-DECLARE @subject varchar(30), @subject_ot varchar(300) ='';
+DECLARE @subject varchar(60), @subject_ot varchar(300) ='';
 OPEN Discipline;
 FETCH Discipline into @subject;
 while @@FETCH_STATUS = 0
 	begin
-		set @subject_ot += RTRIM(@subject) +', ' +  @subject_ot;
+		set @subject_ot = RTRIM(@subject) +', ' +  @subject_ot;
 		FETCH  Discipline into @subject;
 	end;
 CLOSE Discipline;
-set @subject_ot = 'Дисциплины: ' + @subject_ot;
+set @subject_ot = '•Дисциплины: ' + @subject_ot;
 return @subject_ot;
 end;
 
