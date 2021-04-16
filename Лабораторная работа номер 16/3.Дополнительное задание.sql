@@ -2,16 +2,16 @@ use K_UNIVER;
 
 --				ДОПОЛНИТЕЛЬНОЕ ЗАДАНИЕ 
 select 
-	F.FACULTY as "@код",
+	rtrim(F.FACULTY) as "@код",
 	(
 		select COUNT(*) from PULPIT as P where P.FACULTY = F.FACULTY
 	) as "количество_кафедр",
 	(
 		select 
-			p.PULPIT as "@код",
+			rtrim(p.PULPIT) as "@код",
 			(
 				select 
-					T.TEACHER as "преподаватель/@код",
+					rtrim(T.TEACHER) as "преподаватель/@код",
 					T.TEACHER_NAME as "преподаватель"
 				from 
 					TEACHER as T where T.PULPIT = p.PULPIT
